@@ -6,10 +6,13 @@ import com.valproate.sandapp.SandApp;
 
 public class Main {
     public static void main(String[] args) {
+        int width = 1280;
+        int height = 720;
+
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Falling Sand Simulator");
-        config.setWindowedMode(1280, 720);
-        config.useVsync(true);
-        new Lwjgl3Application(new SandApp(), config);
+        config.setWindowedMode(width, height);
+        config.setForegroundFPS(5);
+        new Lwjgl3Application(new SandApp(width, height), config);
     }
 }
