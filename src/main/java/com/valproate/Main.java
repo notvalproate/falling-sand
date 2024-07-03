@@ -12,7 +12,7 @@ public class Main {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Falling Sand Simulator");
         config.setWindowedMode(width, height);
-        config.setForegroundFPS(5);
+        config.setForegroundFPS(60);
         new Lwjgl3Application(new SandApp(width, height), config);
     }
 }

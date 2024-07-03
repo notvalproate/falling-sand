@@ -10,7 +10,7 @@ public class Sand extends Solid {
 
     @Override
     public void step(SandMatrix matrix) {
-        Element e = matrix.getElementByPosition(this.posX, this.posY + 1);
+        Element e = matrix.getElementByPosition(this.posX, this.posY - 1);
 
         System.out.println("Sand step");
 
@@ -21,8 +21,8 @@ public class Sand extends Solid {
         }
 
         if(e.type == ElementType.EMPTY) {
-            this.posY++;
-            matrix.swapElements(this.posX, this.posY, this.posX, this.posY + 1);
+            matrix.swapElements(this.posX, this.posY, this.posX, this.posY - 1);
+            this.posY--;
         }
     }
 }
