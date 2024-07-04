@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.valproate.sandapp.elements.ColorConstants;
 import com.valproate.sandapp.elements.Element;
+import com.valproate.sandapp.elements.ElementType;
 import com.valproate.sandapp.elements.EmptyElement;
 import com.valproate.sandapp.elements.solids.Sand;
 
@@ -60,5 +61,9 @@ public class SandMatrix {
         Element temp = this.matrix[x1][y1];
         this.matrix[x1][y1] = this.matrix[x2][y2];
         this.matrix[x2][y2] = temp;
+    }
+
+    public void createElementAtIndex(int x, int y, ElementType type) {
+        this.matrix[x][y] = type.createElementAtIndex(x, y);
     }
 }

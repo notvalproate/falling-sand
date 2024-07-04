@@ -2,6 +2,7 @@ package com.valproate.sandapp.elements.solids;
 
 import com.valproate.sandapp.SandMatrix;
 import com.valproate.sandapp.elements.Element;
+import com.valproate.sandapp.elements.ElementType;
 
 public class Sand extends Solid {
     public Sand(int posX, int posY) {
@@ -15,8 +16,8 @@ public class Sand extends Solid {
         System.out.println("Sand step");
 
         if(e == null) {
-            System.out.println("Replacing with empty");
-            matrix.replaceWithEmpty(this.posX, this.posY);
+            //System.out.println("Replacing with empty");
+            //matrix.replaceWithEmpty(this.posX, this.posY);
             return;
         }
 

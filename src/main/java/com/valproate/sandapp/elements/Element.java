@@ -18,9 +18,4 @@ public abstract class Element {
     }
 
     public abstract void step(SandMatrix matrix);
-
-    public enum ElementType {
-        EMPTY,
-        SAND;
-    }
 }
