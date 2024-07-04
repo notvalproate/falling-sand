@@ -66,4 +66,12 @@ public class SandMatrix {
     public void createElementAtIndex(int x, int y, ElementType type) {
         this.matrix[x][y] = type.createElementAtIndex(x, y);
     }
+
+    public void createElementsInBounds(int xMin, int xMax, int yMin, int yMax, ElementType type) {
+        for (int i = xMin; i <= xMax; i++) {
+            for (int j = yMin; j <= yMax; j++) {
+                this.matrix[i][j] = type.createElementAtIndex(i, j);
+            }
+        }
+    }
 }

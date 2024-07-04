@@ -13,8 +13,6 @@ public class Sand extends Solid {
     public void step(SandMatrix matrix) {
         Element e = matrix.getElementByPosition(this.posX, this.posY - 1);
 
-        System.out.println("Sand step");
-
         if(e == null) {
             //System.out.println("Replacing with empty");
             //matrix.replaceWithEmpty(this.posX, this.posY);
