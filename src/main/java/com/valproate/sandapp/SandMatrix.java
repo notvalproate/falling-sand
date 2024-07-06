@@ -6,7 +6,6 @@ import com.valproate.sandapp.elements.ColorConstants;
 import com.valproate.sandapp.elements.Element;
 import com.valproate.sandapp.elements.ElementType;
 import com.valproate.sandapp.elements.EmptyElement;
-import com.valproate.sandapp.elements.solids.Sand;
 
 public class SandMatrix {
     private final int width, height;
@@ -22,8 +21,6 @@ public class SandMatrix {
                 this.matrix[i][j] = EmptyElement.getInstance();
             }
         }
-
-        this.matrix[width / 2][height / 2] = new Sand(width / 2, height / 2);
     }
 
     public void step() {
@@ -34,13 +31,28 @@ public class SandMatrix {
         }
     }
 
+    // OPTIMIZE THIS THING IT EATS MY FPS
     public void render(ShapeRenderer sr) {
-        sr.begin(ShapeRenderer.ShapeType.Point);
-        for (int i = 0; i < this.width; i++) {
-            for (int j = 0; j < this.height; j++) {
-                Color color = ColorConstants.getColorByType(this.matrix[i][j].type);
-                sr.setColor(color);
-                sr.point(i, j, 0);
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+        for (int j = 0; j < this.height; j++) {
+            for (int i = 0; i < this.width; i++) {
+                if(this.matrix[i][j].type == ElementType.EMPTY) {
+                    continue;
+                }
+
+                Color currentColor = ColorConstants.getColorByType(this.matrix[i][j].type);
+                int toIndex = i;
+                for(int following = i; following < this.width; following++) {
+                    Element followingElement = this.matrix[following][j];
+                    if(!currentColor.equals(ColorConstants.getColorByType(followingElement.type))) {
+                        break;
+                    }
+                    toIndex = following;
+                }
+
+                sr.setColor(currentColor);
+                sr.rect(i, j, toIndex - i + 1 , 1);
+                i = toIndex;
             }
         }
         sr.end();
@@ -68,10 +80,23 @@ public class SandMatrix {
     }
 
     public void createElementsInBounds(int xMin, int xMax, int yMin, int yMax, ElementType type) {
+        xMin = this.clampToViewportWidth(xMin);
+        xMax = this.clampToViewportWidth(xMax);
+        yMin = this.clampToViewportHeight(yMin);
+        yMax = this.clampToViewportHeight(yMax);
+
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMin; j <= yMax; j++) {
                 this.matrix[i][j] = type.createElementAtIndex(i, j);
             }
         }
+    }
+
+    private int clampToViewportWidth(int x) {
+        return Math.max(0, Math.min(this.width - 1, x));
+    }
+
+    private int clampToViewportHeight(int y) {
+        return Math.max(0, Math.min(this.height - 1, y));
     }
 }

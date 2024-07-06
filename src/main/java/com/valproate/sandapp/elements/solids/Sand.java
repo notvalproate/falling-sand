@@ -14,7 +14,6 @@ public class Sand extends Solid {
         Element e = matrix.getElementByPosition(this.posX, this.posY - 1);
 
         if(e == null) {
-            //System.out.println("Replacing with empty");
             //matrix.replaceWithEmpty(this.posX, this.posY);
             return;
         }
