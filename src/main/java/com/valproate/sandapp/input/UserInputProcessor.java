@@ -2,6 +2,7 @@ package com.valproate.sandapp.input;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Vector2;
 import com.valproate.sandapp.SandMatrix;
 import com.valproate.sandapp.elements.ElementType;
 
@@ -9,26 +10,39 @@ public class UserInputProcessor extends InputAdapter {
     private int viewportHeight;
     private final SandMatrix matrix;
     private int brushSize;
+    private MouseState mouseState;
+    private Vector2 lastMousePosition;
 
     public UserInputProcessor(SandMatrix matrix, int viewportHeight) {
         this.matrix = matrix;
         this.viewportHeight = viewportHeight;
         this.brushSize = 10;
+        mouseState = MouseState.UP;
+    }
+
+    public void handleInputs() {
+        if(mouseState == MouseState.DOWN) {
+            Bounds b = getSquareBounds((int) lastMousePosition.x, (int) lastMousePosition.y);
+            matrix.createElementsInBounds(b.x1, b.x2, this.viewportHeight - b.y2, this.viewportHeight - b.y1, ElementType.SAND);
+        }
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(button == Input.Buttons.LEFT) {
-            Bounds b = getSquareBounds(screenX, screenY);
-            matrix.createElementsInBounds(b.x1, b.x2, this.viewportHeight - b.y2, this.viewportHeight - b.y1, ElementType.SAND);
-        }
+        mouseState = MouseState.DOWN;
+        lastMousePosition = new Vector2(screenX, screenY);
         return true;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        Bounds b = getSquareBounds(screenX, screenY);
-        matrix.createElementsInBounds(b.x1, b.x2, this.viewportHeight - b.y2, this.viewportHeight - b.y1, ElementType.SAND);
+        lastMousePosition = new Vector2(screenX, screenY);
+        return true;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        mouseState = MouseState.UP;
         return true;
     }
 
@@ -57,5 +71,9 @@ public class UserInputProcessor extends InputAdapter {
             this.y1 = y1;
             this.y2 = y2;
         }
+    }
+
+    private enum MouseState {
+        UP, DOWN
     }
 }

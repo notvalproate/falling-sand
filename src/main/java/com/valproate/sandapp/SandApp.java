@@ -33,6 +33,8 @@ public class SandApp extends ApplicationAdapter {
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
 
+        inputProcessor.handleInputs();
+
         matrix.step();
         matrix.render(sr);
     }
