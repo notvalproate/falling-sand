@@ -69,10 +69,24 @@ public class SandMatrix {
         this.matrix[x][y] = EmptyElement.getInstance();
     }
 
+    public void swapWithEmpty(int x1, int y1, int x2, int y2) {
+        this.matrix[x2][y2] = this.matrix[x1][y1];
+        this.matrix[x1][y1] = EmptyElement.getInstance();
+
+        this.matrix[x2][y2].posX = x2;
+        this.matrix[x2][y2].posY = y2;
+    }
+
     public void swapElements(int x1, int y1, int x2, int y2) {
         Element temp = this.matrix[x1][y1];
         this.matrix[x1][y1] = this.matrix[x2][y2];
         this.matrix[x2][y2] = temp;
+
+//        this.matrix[x1][y1].posX = x1;
+//        this.matrix[x1][y1].posY--;
+//
+//        this.matrix[x2][y2].posX = x2;
+        System.out.println(this.matrix[x2][y2].posY);
     }
 
     public void createElementAtIndex(int x, int y, ElementType type) {

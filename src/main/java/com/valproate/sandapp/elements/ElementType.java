@@ -1,6 +1,6 @@
 package com.valproate.sandapp.elements;
 
-import com.valproate.sandapp.elements.solids.Sand;
+import com.valproate.sandapp.elements.solids.movable.Sand;
 
 public enum ElementType {
     EMPTY() {
