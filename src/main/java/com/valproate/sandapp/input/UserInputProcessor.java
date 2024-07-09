@@ -12,18 +12,20 @@ public class UserInputProcessor extends InputAdapter {
     private int brushSize;
     private MouseState mouseState;
     private Vector2 lastMousePosition;
+    private ElementType brushType;
 
     public UserInputProcessor(SandMatrix matrix, int viewportHeight) {
         this.matrix = matrix;
         this.viewportHeight = viewportHeight;
         this.brushSize = 10;
+        this.brushType = ElementType.SAND;
         mouseState = MouseState.UP;
     }
 
     public void handleInputs() {
         if(mouseState == MouseState.DOWN) {
             Bounds b = getSquareBounds((int) lastMousePosition.x, (int) lastMousePosition.y);
-            matrix.createElementsInBounds(b.x1, b.x2, this.viewportHeight - b.y2, this.viewportHeight - b.y1, ElementType.SAND);
+            matrix.createElementsInBounds(b.x1, b.x2, this.viewportHeight - b.y2, this.viewportHeight - b.y1, this.brushType);
         }
     }
 
@@ -43,6 +45,17 @@ public class UserInputProcessor extends InputAdapter {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         mouseState = MouseState.UP;
+        return true;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        switch (keycode) {
+            case Input.Keys.NUM_1 -> this.brushType = ElementType.SAND;
+            case Input.Keys.NUM_2 -> this.brushType = ElementType.STONE;
+            case Input.Keys.NUM_0 -> this.brushType = ElementType.EMPTY;
+        }
+
         return true;
     }
 

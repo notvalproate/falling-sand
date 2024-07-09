@@ -1,5 +1,6 @@
 package com.valproate.sandapp.elements;
 
+import com.valproate.sandapp.elements.solids.immovable.Stone;
 import com.valproate.sandapp.elements.solids.movable.Sand;
 
 public enum ElementType {
@@ -14,7 +15,13 @@ public enum ElementType {
         public Element createElementAtIndex(int x, int y) {
             return new Sand(x, y);
         }
-    };
+    },
+    STONE() {
+        @Override
+        public Element createElementAtIndex(int x, int y) {
+            return new Stone(x, y);
+        }
+    },;
 
     public abstract Element createElementAtIndex(int x, int y);
 }
