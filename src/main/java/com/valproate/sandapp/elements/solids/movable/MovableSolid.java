@@ -1,12 +1,15 @@
 package com.valproate.sandapp.elements.solids.movable;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.valproate.sandapp.SandMatrix;
 import com.valproate.sandapp.elements.Element;
 import com.valproate.sandapp.elements.ElementType;
 import com.valproate.sandapp.elements.solids.Solid;
 
 public abstract class MovableSolid extends Solid {
+    private final float velocityThreshold = -128f;
+
     public MovableSolid(int posX, int posY, ElementType type) {
         super(posX, posY, type);
     }
@@ -17,31 +20,36 @@ public abstract class MovableSolid extends Solid {
 
         int maxY = (int) (Math.abs(this.velocity.y) * Gdx.graphics.getDeltaTime());
         int sign = this.velocity.y > 0 ? 1 : -1;
+        Vector2 lastValidPosition = new Vector2(this.posX, this.posY);
+        Vector2 newPosition = new Vector2(this.posX, this.posY);
 
         for(int i = 1; i <= maxY; i++) {
-            boolean isLast = i == maxY;
             int newY = this.posY + (i * sign);
+            newPosition.y = newY;
 
             if(newY >= 0 && newY < matrix.height) {
                 Element neighbor = matrix.getElementByPosition(this.posX, newY);
 
                 if (neighbor == this) continue;
 
-                boolean stopped = actOnNeighbor(neighbor, matrix, newY, isLast);
+                boolean stopped = actOnNeighbor(neighbor, matrix, newPosition, i == maxY, i == 1, lastValidPosition, false);
 
                 if(stopped) {
                     break;
                 }
+
+                lastValidPosition.x = this.posX;
+                lastValidPosition.y = newY;
             } else {
                 matrix.swapElements(this.posX, this.posY, this.posX, matrix.clampToViewportHeight(newY));
             }
         }
     }
 
-    private boolean actOnNeighbor(Element neighbor, SandMatrix matrix, int newY, boolean isLast) {
+    private boolean actOnNeighbor(Element neighbor, SandMatrix matrix, Vector2 newPosition, boolean isLast, boolean isFirst, Vector2 lastValidPosition, boolean isDiagonal) {
         if(neighbor.type == ElementType.EMPTY) {
             if(isLast) {
-                matrix.swapElements(this.posX, this.posY, this.posX, newY);
+                matrix.swapElements(this.posX, this.posY, (int) newPosition.x, (int) newPosition.y);
                 return true;
             } else {
                 return false;
@@ -54,8 +62,16 @@ public abstract class MovableSolid extends Solid {
         }
 
         if(neighbor.type == ElementType.STONE || neighbor.type == ElementType.SAND) {
-            matrix.swapElements(this.posX, this.posY, neighbor.posX, neighbor.posY + 1);
-            velocity.y = -64f;
+            if(isFirst) {
+                int newX = neighbor.posX + (Math.random() > 0.5 ? 1 : -1);
+                newPosition.x = newX;
+                Element diagonalNeighbor = matrix.getElementByPosition(newX, neighbor.posY);
+
+                actOnNeighbor(diagonalNeighbor, matrix, newPosition, true, false, lastValidPosition, true);
+            } else {
+                moveToLastValidPosition(matrix, lastValidPosition);
+            }
+            velocity.y = Math.min(-64f, (velocity.y + neighbor.velocity.y) / 2);
             return true;
         }
 

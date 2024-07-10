@@ -17,10 +17,14 @@ public abstract class Element {
         this.color = ColorConstants.getColorByType(type);
     }
 
+    public abstract void step(SandMatrix matrix);
+
     public void updatePosition(int posX, int posY) {
         this.posX = posX;
         this.posY = posY;
     }
 
-    public abstract void step(SandMatrix matrix);
+    public void moveToLastValidPosition(SandMatrix matrix, Vector2 lastValidPosition) {
+        matrix.swapElements(this.posX, this.posY, (int) lastValidPosition.x, (int) lastValidPosition.y);
+    }
 }
