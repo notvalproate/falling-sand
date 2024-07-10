@@ -2,13 +2,16 @@ package com.valproate.sandapp;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.valproate.sandapp.elements.ColorConstants;
 import com.valproate.sandapp.elements.Element;
 import com.valproate.sandapp.elements.ElementType;
 import com.valproate.sandapp.elements.EmptyElement;
 
 public class SandMatrix {
-    private final int width, height;
+    public static Vector2 gravity = new Vector2(0, -5f);
+
+    public final int width, height;
     private final Element[][] matrix;
 
     SandMatrix(int width, int height) {
@@ -69,20 +72,17 @@ public class SandMatrix {
         this.matrix[x][y] = EmptyElement.getInstance();
     }
 
-    public void swapWithEmpty(int x1, int y1, int x2, int y2) {
-        this.matrix[x2][y2] = this.matrix[x1][y1];
-        this.matrix[x1][y1] = EmptyElement.getInstance();
-
-        this.matrix[x2][y2].updatePosition(x2, y2);
-    }
-
     public void swapElements(int x1, int y1, int x2, int y2) {
         Element temp = this.matrix[x1][y1];
         this.matrix[x1][y1] = this.matrix[x2][y2];
         this.matrix[x2][y2] = temp;
 
-        this.matrix[x1][y1].updatePosition(x1, y1);
-        this.matrix[x2][y2].updatePosition(x2, y2);
+        if(this.matrix[x1][y1].type != ElementType.EMPTY) {
+            this.matrix[x1][y1].updatePosition(x1, y1);
+        }
+        if(this.matrix[x2][y2].type != ElementType.EMPTY) {
+            this.matrix[x2][y2].updatePosition(x2, y2);
+        }
     }
 
     public void createElementAtIndex(int x, int y, ElementType type) {
@@ -102,11 +102,11 @@ public class SandMatrix {
         }
     }
 
-    private int clampToViewportWidth(int x) {
+    public int clampToViewportWidth(int x) {
         return Math.max(0, Math.min(this.width - 1, x));
     }
 
-    private int clampToViewportHeight(int y) {
+    public int clampToViewportHeight(int y) {
         return Math.max(0, Math.min(this.height - 1, y));
     }
 }

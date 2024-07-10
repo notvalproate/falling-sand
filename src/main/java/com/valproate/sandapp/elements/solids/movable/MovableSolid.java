@@ -1,5 +1,6 @@
 package com.valproate.sandapp.elements.solids.movable;
 
+import com.badlogic.gdx.Gdx;
 import com.valproate.sandapp.SandMatrix;
 import com.valproate.sandapp.elements.Element;
 import com.valproate.sandapp.elements.ElementType;
@@ -12,26 +13,49 @@ public abstract class MovableSolid extends Solid {
 
     @Override
     public void step(SandMatrix matrix) {
-        if(actOnNeighbour(matrix, this.posX, this.posY - 1)) {
-            return;
-        }
+        this.velocity.add(SandMatrix.gravity);
 
-        if(actOnNeighbour(matrix, this.posX - 1, this.posY - 1)) {
-            return;
-        }
+        int maxY = (int) (Math.abs(this.velocity.y) * Gdx.graphics.getDeltaTime());
+        int sign = this.velocity.y > 0 ? 1 : -1;
 
-        actOnNeighbour(matrix, this.posX + 1, this.posY - 1);
+        for(int i = 1; i <= maxY; i++) {
+            boolean isLast = i == maxY;
+            int newY = this.posY + (i * sign);
+
+            if(newY >= 0 && newY < matrix.height) {
+                Element neighbor = matrix.getElementByPosition(this.posX, newY);
+
+                if (neighbor == this) continue;
+
+                boolean stopped = actOnNeighbor(neighbor, matrix, newY, isLast);
+
+                if(stopped) {
+                    break;
+                }
+            } else {
+                matrix.swapElements(this.posX, this.posY, this.posX, matrix.clampToViewportHeight(newY));
+            }
+        }
     }
 
-    private boolean actOnNeighbour(SandMatrix matrix, int x, int y) {
-        Element e = matrix.getElementByPosition(x, y);
+    private boolean actOnNeighbor(Element neighbor, SandMatrix matrix, int newY, boolean isLast) {
+        if(neighbor.type == ElementType.EMPTY) {
+            if(isLast) {
+                matrix.swapElements(this.posX, this.posY, this.posX, newY);
+                return true;
+            } else {
+                return false;
+            }
+        }
 
-        if(e == null) {
+        if(neighbor.type == ElementType.WATER) {
+            matrix.swapElements(this.posX, this.posY, neighbor.posX, neighbor.posY);
             return true;
         }
 
-        if(e.type == ElementType.EMPTY) {
-            matrix.swapWithEmpty(this.posX, this.posY, x, y);
+        if(neighbor.type == ElementType.STONE || neighbor.type == ElementType.SAND) {
+            matrix.swapElements(this.posX, this.posY, neighbor.posX, neighbor.posY + 1);
+            velocity.y = -64f;
             return true;
         }
 

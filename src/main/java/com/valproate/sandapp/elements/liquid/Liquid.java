@@ -15,20 +15,20 @@ public class Liquid extends Element {
 
     @Override
     public void step(SandMatrix matrix) {
-        if(actOnNeighbour(matrix, this.posX, this.posY - 1)) {
+        if(actOnNeighbor(matrix, this.posX, this.posY - 1)) {
             return;
         }
 
         int direction = random.nextBoolean() ? 1 : -1;
 
-        if(actOnNeighbour(matrix, this.posX + direction, this.posY)) {
+        if(actOnNeighbor(matrix, this.posX + direction, this.posY)) {
             return;
         }
 
-        actOnNeighbour(matrix, this.posX - direction, this.posY);
+        actOnNeighbor(matrix, this.posX - direction, this.posY);
     }
 
-    private boolean actOnNeighbour(SandMatrix matrix, int x, int y) {
+    private boolean actOnNeighbor(SandMatrix matrix, int x, int y) {
         Element e = matrix.getElementByPosition(x, y);
 
         if(e == null) {
@@ -36,7 +36,7 @@ public class Liquid extends Element {
         }
 
         if(e.type == ElementType.EMPTY) {
-            matrix.swapWithEmpty(this.posX, this.posY, x, y);
+            matrix.swapElements(this.posX, this.posY, x, y);
             return true;
         }
 
