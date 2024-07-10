@@ -32,7 +32,7 @@ public abstract class MovableSolid extends Solid {
 
                 if (neighbor == this) continue;
 
-                boolean stopped = actOnNeighbor(neighbor, matrix, newPosition, i == maxY, i == 1, lastValidPosition, false);
+                boolean stopped = actOnNeighbor(neighbor, matrix, newPosition, i == maxY, i == 1, lastValidPosition);
 
                 if(stopped) {
                     break;
@@ -41,12 +41,12 @@ public abstract class MovableSolid extends Solid {
                 lastValidPosition.x = this.posX;
                 lastValidPosition.y = newY;
             } else {
-                matrix.swapElements(this.posX, this.posY, this.posX, matrix.clampToViewportHeight(newY));
+                matrix.swapElements(this.posX, this.posY, (int) lastValidPosition.x, (int) lastValidPosition.y);
             }
         }
     }
 
-    private boolean actOnNeighbor(Element neighbor, SandMatrix matrix, Vector2 newPosition, boolean isLast, boolean isFirst, Vector2 lastValidPosition, boolean isDiagonal) {
+    private boolean actOnNeighbor(Element neighbor, SandMatrix matrix, Vector2 newPosition, boolean isLast, boolean isFirst, Vector2 lastValidPosition) {
         if(neighbor.type == ElementType.EMPTY) {
             if(isLast) {
                 matrix.swapElements(this.posX, this.posY, (int) newPosition.x, (int) newPosition.y);
@@ -64,10 +64,15 @@ public abstract class MovableSolid extends Solid {
         if(neighbor.type == ElementType.STONE || neighbor.type == ElementType.SAND) {
             if(isFirst) {
                 int newX = neighbor.posX + (Math.random() > 0.5 ? 1 : -1);
-                newPosition.x = newX;
-                Element diagonalNeighbor = matrix.getElementByPosition(newX, neighbor.posY);
 
-                actOnNeighbor(diagonalNeighbor, matrix, newPosition, true, false, lastValidPosition, true);
+                if(newX >= 0 && newX < matrix.width) {
+                    newPosition.x = newX;
+                    Element diagonalNeighbor = matrix.getElementByPosition(newX, neighbor.posY);
+
+                    actOnNeighbor(diagonalNeighbor, matrix, newPosition, true, false, lastValidPosition);
+                }
+
+                return true;
             } else {
                 moveToLastValidPosition(matrix, lastValidPosition);
             }

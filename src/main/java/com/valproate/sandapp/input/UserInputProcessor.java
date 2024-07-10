@@ -17,7 +17,7 @@ public class UserInputProcessor extends InputAdapter {
     public UserInputProcessor(SandMatrix matrix, int viewportHeight) {
         this.matrix = matrix;
         this.viewportHeight = viewportHeight;
-        this.brushSize = 10;
+        this.brushSize = 2;
         this.brushType = ElementType.SAND;
         mouseState = MouseState.UP;
     }
