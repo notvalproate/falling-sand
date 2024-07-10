@@ -53,6 +53,7 @@ public class UserInputProcessor extends InputAdapter {
         switch (keycode) {
             case Input.Keys.NUM_1 -> this.brushType = ElementType.SAND;
             case Input.Keys.NUM_2 -> this.brushType = ElementType.STONE;
+            case Input.Keys.NUM_3 -> this.brushType = ElementType.WATER;
             case Input.Keys.NUM_0 -> this.brushType = ElementType.EMPTY;
         }
 
