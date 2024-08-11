@@ -7,6 +7,6 @@ public class Water extends Liquid {
     public Water(int posX, int posY) {
         super(posX, posY, ElementType.WATER);
         this.velocity = new Vector2(0f, -256f);
-        this.dispersionRate = 5;
+        this.dispersionRate = 4;
     }
 }

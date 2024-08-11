@@ -68,10 +68,6 @@ public class SandMatrix {
         return this.matrix[x][y];
     }
 
-    public void replaceWithEmpty(int x, int y) {
-        this.matrix[x][y] = EmptyElement.getInstance();
-    }
-
     public void swapElements(int x1, int y1, int x2, int y2) {
         Element temp = this.matrix[x1][y1];
         this.matrix[x1][y1] = this.matrix[x2][y2];
@@ -83,10 +79,6 @@ public class SandMatrix {
         if(this.matrix[x2][y2].type != ElementType.EMPTY) {
             this.matrix[x2][y2].updatePosition(x2, y2);
         }
-    }
-
-    public void createElementAtIndex(int x, int y, ElementType type) {
-        this.matrix[x][y] = type.createElementAtIndex(x, y);
     }
 
     public void createElementsInBounds(int xMin, int xMax, int yMin, int yMax, ElementType type) {
@@ -106,7 +98,5 @@ public class SandMatrix {
         return Math.max(0, Math.min(this.width - 1, x));
     }
 
-    public int clampToViewportHeight(int y) {
-        return Math.max(0, Math.min(this.height - 1, y));
-    }
+    public int clampToViewportHeight(int y) { return Math.max(0, Math.min(this.height - 1, y)); }
 }

@@ -17,15 +17,15 @@ public class UserInputProcessor extends InputAdapter {
     public UserInputProcessor(SandMatrix matrix, int viewportHeight) {
         this.matrix = matrix;
         this.viewportHeight = viewportHeight;
-        this.brushSize = 2;
+        this.brushSize = 10;
         this.brushType = ElementType.SAND;
         mouseState = MouseState.UP;
     }
 
     public void handleInputs() {
         if(mouseState == MouseState.DOWN) {
-            Bounds b = getSquareBounds((int) lastMousePosition.x, (int) lastMousePosition.y);
-            matrix.createElementsInBounds(b.x1, b.x2, this.viewportHeight - b.y2, this.viewportHeight - b.y1, this.brushType);
+//            Bounds b = getSquareBounds((int) lastMousePosition.x, (int) lastMousePosition.y);
+//            matrix.createElementsInBounds(b.x1, b.x2, this.viewportHeight - b.y2, this.viewportHeight - b.y1, this.brushType);
         }
     }
 
@@ -33,6 +33,8 @@ public class UserInputProcessor extends InputAdapter {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         mouseState = MouseState.DOWN;
         lastMousePosition = new Vector2(screenX, screenY);
+        Bounds b = getSquareBounds((int) lastMousePosition.x, (int) lastMousePosition.y);
+        matrix.createElementsInBounds(b.x1, b.x2, this.viewportHeight - b.y2, this.viewportHeight - b.y1, this.brushType);
         return true;
     }
 
